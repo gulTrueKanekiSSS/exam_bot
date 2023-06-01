@@ -34,7 +34,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           source: "deploy/docker-compose.yaml,deploy/docker_config.py"
-          target: "exam_bot_ci"
+          target: "tg_bot_ci"
           strip_components: 1
       - name: deploy bot
         uses: appleboy/ssh-action@master
@@ -43,5 +43,5 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           script: |
-            cd exam_bot_ci
+            cd tg_bot_ci
             echo ${{ secrets.PASSWORD }} | sudo -S docker-compose up -d
