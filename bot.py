@@ -7,7 +7,8 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher.filters import Text
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from data_base import db, Birthday
-from keyboards import moves, moves_with_nt
+from keyboards import moves, moves_with_nt, valutes, is_true
+from functions import courses_cash
 
 
 bot = Bot(token='6024132241:AAFGnX1FE7E2S7T1mqC_mad8JrQ2yDv_Wcw')
@@ -34,6 +35,42 @@ async def welcome_message(message: types.Message):
                            parse_mode='html',
                            reply_markup=moves
                            )
+
+
+@dp.message_handler(Text(equals="Курс валют"))
+async def currency_show(message: types.Message):
+    await message.answer('Выбери курс интересующей тебя валюты', reply_markup=valutes)
+
+
+@dp.message_handler(Text(equals="USD"))
+async def show_currency_usd(message: types.Message):
+    course = courses_cash("USD")
+    await message.answer(f'1 dollar = {course}rub', reply_markup=is_true)
+    while True:
+        new_course = courses_cash("USD")
+        if new_course != course:
+            course = new_course
+            await message.answer(f'1 dollar = {new_course}rub', reply_markup=is_true)
+        else:
+            continue
+
+
+@dp.message_handler(Text(equals="EUR"))
+async def show_currency_eur(message: types.Message):
+    course = courses_cash("EUR")
+    await message.answer(f'1 euro = {course}rub', reply_markup=is_true)
+    while True:
+        new_course = courses_cash("EUR")
+        if new_course != course:
+            course = new_course
+            await message.answer(f'1 euro = {new_course}rub', reply_markup=is_true)
+        else:
+            continue
+
+
+@dp.message_handler(Text(equals="Закончить отслеживание курса валюты"))
+async def stop_find(message: types.Message):
+    await message.answer('стоп')
 
 
 @dp.message_handler(Text(equals="Добавить запись"))
